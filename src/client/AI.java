@@ -3,6 +3,7 @@ package client;
 
 import client.model.Answer;
 import client.model.Ant;
+import client.model.enums.AntType;
 import client.model.enums.Direction;
 
 /**
@@ -19,15 +20,16 @@ public class AI {
      * next destination in map (the necessary parameter), the Message (not necessary) for your
      * chat message and the value (if there is any message) for your message value.
      */
-    static int turn = 0;
+    static private AIAgent agent = null;
 
     public Answer turn(World world) {
-        // Enter your AI code here
-        AI.turn++;
-        System.out.println("turn passed!"); // this is a sample code you can easily delete this line
-        // You can generate an answer using one of these two ways:
-        Answer answer_1 = new Answer(Direction.DOWN);
-        Answer answer_2 = new Answer(Direction.UP, "new message", 10);
-        return answer_1;
+        if (agent == null) {
+            if (world.getAnt().getType() == AntType.KARGAR) {
+                agent = new KargarBFSAgent(world);
+            } else {
+                agent = new UpAgent();
+            }
+        }
+        return agent.turn(world);
     }
 }
